@@ -19,17 +19,30 @@
     </header>
 
     <main>
+      <!-- 新增燈泡顯示區域 -->
+      <div class="bulb-container">
+        <div class="bulb {{BULB_GLOW}}" id="bulb">
+          <div class="bulb-top"></div>
+          <div class="bulb-middle"></div>
+          <div class="bulb-bottom"></div>
+          <div class="bulb-base"></div>
+          <div class="bulb-reflection"></div>
+        </div>
+        <div class="bulb-status" id="bulbStatus">{{STATUS_TEXT}}</div>
+        <div class="filament {{BULB_GLOW}}" id="filament"></div>
+      </div>
+
       <div class="control-panel">
         <div class="status-indicator">
           <div class="led-status {{LED_COLOR}}">
-            LED 狀態: <span id="ledState">{{LED_STATE}}</span>
+            GPIO 2 狀態: <span id="ledState">{{LED_STATE}}</span>
           </div>
         </div>
 
         <div class="button-group">
-          <button class="btn btn-success" onclick="controlLED('on')">開啟 LED</button>
-          <button class="btn btn-danger" onclick="controlLED('off')">關閉 LED</button>
-          <button class="btn btn-primary" onclick="controlLED('toggle')">切換 LED</button>
+          <button class="btn btn-success" onclick="controlLED('on')">💡 開啟燈泡</button>
+          <button class="btn btn-danger" onclick="controlLED('off')">🔌 關閉燈泡</button>
+          <button class="btn btn-primary" onclick="controlLED('toggle')">🔄 切換狀態</button>
         </div>
 
         <div class="system-info">

@@ -10,8 +10,8 @@
 
 // ========== 設定區 ==========
 // 網路設定
-const char* ssid = "您的Wi-Fi名稱";
-const char* password = "您的Wi-Fi密碼";
+const char* ssid = "TP-LINK_123BF4";
+const char* password = "04518280";
 
 // 裝置設定
 const int ledPin = 2;
@@ -203,6 +203,42 @@ String processHTMLTemplate(const String& filePath) {
   html.replace("{{FREE_HEAP}}", String(ESP.getFreeHeap()));
   
   return html;
+}
+
+// 在原有的 API 端點後新增以下函數
+void handleBulbStatus() {
+  DynamicJsonDocument doc(256);
+  doc["status"] = "success";
+  doc["led_state"] = ledState;
+  doc["bulb_color"] = ledState ? "#ffd700" : "#666666";
+  doc["bulb_glow"] = ledState ? "bulb-on" : "bulb-off";
+  doc["status_text"] = ledState ? "燈泡亮起" : "燈泡熄滅";
+  
+  String response;
+  serializeJson(doc, response);
+  server.send(200, "application/json", response);
+}
+
+// 在 initializeWebServer() 函數中新增路由
+void initializeWebServer() {
+  // 靜態檔案服務
+  server.on("/", HTTP_GET, handleRoot);
+  server.on("/style.css", HTTP_GET, handleCSS);
+  server.on("/script.js", HTTP_GET, handleJS);
+  server.on("/favicon.ico", HTTP_GET, handleFavicon);
+  
+  // API 端點
+  server.on("/api/led/on", HTTP_POST, handleLEDOn);
+  server.on("/api/led/off", HTTP_POST, handleLEDOff);
+  server.on("/api/led/toggle", HTTP_POST, handleLEDToggle);
+  server.on("/api/status", HTTP_GET, handleGetStatus);
+  server.on("/api/bulb/status", HTTP_GET, handleBulbStatus); // 新增燈泡狀態 API
+  
+  // 404 處理
+  server.onNotFound(handleNotFound);
+  
+  server.begin();
+  Serial.println("🚀 HTTP 伺服器已啟動");
 }
 
 // ========== Arduino 主程式 ==========
