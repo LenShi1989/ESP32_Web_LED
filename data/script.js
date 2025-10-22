@@ -116,7 +116,7 @@ async function updateSystemStatus() {
 setInterval(() => {
     updateSystemStatus();
     updateBulbStatus();
-}, 5000);
+}, 1000);
 
 // 頁面載入完成後初始化
 document.addEventListener("DOMContentLoaded", function () {
