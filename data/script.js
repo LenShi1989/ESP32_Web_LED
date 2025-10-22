@@ -148,3 +148,90 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+
+// --------------------------------------------------------------------
+
+
+// 側邊欄功能
+let sidebar = document.getElementById('sidebar');
+let mainContent = document.getElementById('mainContent');
+let sidebarToggle = document.getElementById('sidebarToggle');
+
+// 切換側邊欄
+function toggleSidebar() {
+    sidebar.classList.toggle('collapsed');
+}
+
+// 響應式側邊欄
+function handleResize() {
+    if (window.innerWidth <= 768) {
+        sidebar.classList.remove('collapsed');
+    }
+}
+
+// 頁面導航高亮
+function highlightCurrentPage() {
+    const currentPage = window.location.pathname;
+    const navItems = document.querySelectorAll('.nav-item');
+
+    navItems.forEach(item => {
+        item.classList.remove('active');
+        const link = item.querySelector('.nav-link');
+        if (link.getAttribute('href') === currentPage) {
+            item.classList.add('active');
+        }
+    });
+}
+
+// 更新系統狀態
+async function updateSystemStatus() {
+    try {
+        const response = await fetch('/api/system/info');
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            // 更新頂部狀態欄
+            document.getElementById('heapMemory').textContent = data.memory.free_heap.toLocaleString();
+            document.getElementById('wifiRSSI').textContent = data.wifi.rssi;
+
+            // 更新運行時間
+            const uptime = Math.floor(data.system.uptime / 1000 / 60); // 分鐘
+            document.getElementById('uptime').innerHTML = `<i class="fas fa-clock"></i> ${uptime} 分鐘`;
+
+            // 更新狀態卡片
+            document.getElementById('wifiStatus').textContent = `${data.wifi.rssi} dBm`;
+            document.getElementById('memoryStatus').textContent = `${data.memory.free_heap.toLocaleString()} bytes`;
+            document.getElementById('uptimeStatus').textContent = `${uptime} 分鐘`;
+        }
+    } catch (error) {
+        console.error('Error updating system status:', error);
+    }
+}
+
+// 頁面初始化
+document.addEventListener('DOMContentLoaded', function () {
+    // 側邊欄事件
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', toggleSidebar);
+    }
+
+    // 高亮當前頁面
+    highlightCurrentPage();
+
+    // 初始更新
+    updateSystemStatus();
+    updateBulbStatus();
+
+    // 定期更新
+    setInterval(updateSystemStatus, 5000);
+    setInterval(updateBulbStatus, 3000);
+
+    // 視窗大小監聽
+    window.addEventListener('resize', handleResize);
+
+    // 初始處理響應式
+    handleResize();
+});
+
+// 其他現有函數保持不變...

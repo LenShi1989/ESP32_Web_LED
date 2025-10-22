@@ -332,3 +332,391 @@ footer {
 .notification-icon {
     font-size: 1.2em;
 }
+
+/* -------------------------------------------------------------- */
+
+/* 側邊欄樣式 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.logo i {
+    font-size: 1.5em;
+    color: #3498db;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.sidebar-nav {
+    padding: 20px 0;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    margin: 5px 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 25px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border-left-color: #3498db;
+}
+
+.nav-item.active .nav-link {
+    background: rgba(52, 152, 219, 0.2);
+    color: white;
+    border-left-color: #3498db;
+}
+
+.nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.2);
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.status-connected {
+    color: #27ae60;
+}
+
+.status-disconnected {
+    color: #e74c3c;
+}
+
+/* 主內容區域 */
+.main-content {
+    margin-left: 280px;
+    min-height: 100vh;
+    background: #f8f9fa;
+    transition: margin-left 0.3s ease;
+}
+
+/* 頂部導航欄 */
+.top-header {
+    background: white;
+    padding: 20px 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-title {
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.page-title i {
+    color: #3498db;
+}
+
+.system-status {
+    display: flex;
+    gap: 25px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+.status-item i {
+    color: #3498db;
+}
+
+/* 內容區域 */
+.content-area {
+    padding: 30px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    grid-auto-rows: minmax(200px, auto);
+}
+
+.bulb-card {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.status-card {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.quick-actions-card {
+    grid-column: 1 / -1;
+    grid-row: 2;
+}
+
+/* 卡片樣式 */
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header i {
+    color: #3498db;
+}
+
+.card-body {
+    padding: 25px;
+}
+
+/* 燈泡容器調整 */
+.bulb-container {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-lg {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 狀態列表 */
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.status-label {
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.status-value {
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+
+.status-value.green {
+    background: #d5f4e6;
+    color: #27ae60;
+}
+
+.status-value.red {
+    background: #fde8e6;
+    color: #e74c3c;
+}
+
+/* 快速操作 */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.action-btn {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    padding: 20px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #495057;
+}
+
+.action-btn:hover {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+    transform: translateY(-2px);
+}
+
+.action-btn i {
+    font-size: 1.5em;
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bulb-card,
+    .status-card,
+    .quick-actions-card {
+        grid-column: 1;
+    }
+    
+    .bulb-card { grid-row: 1; }
+    .status-card { grid-row: 2; }
+    .quick-actions-card { grid-row: 3; }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 250px;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .sidebar.active + .main-content {
+        margin-left: 250px;
+    }
+    
+    .system-status {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .control-buttons {
+        flex-direction: column;
+    }
+}
+
+/* 側邊欄折叠狀態 */
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-text,
+.sidebar.collapsed .status-text,
+.sidebar.collapsed .device-info {
+    display: none;
+}
+
+.sidebar.collapsed + .main-content {
+    margin-left: 80px;
+}
+
+.sidebar.collapsed .nav-link {
+    justify-content: center;
+    padding: 15px;
+}
+
+.sidebar.collapsed .nav-link i {
+    font-size: 1.3em;
+}

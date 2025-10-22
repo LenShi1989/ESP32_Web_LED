@@ -4,57 +4,187 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{DEVICE_NAME}}</title>
+  <title>{{DEVICE_NAME}} - 主控台</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
-  <div class="container">
-    <header>
-      <h1>{{DEVICE_NAME}}</h1>
+  <!-- 側邊欄 -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-microchip"></i>
+        <span class="logo-text">ESP32控制中心</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li class="nav-item active">
+          <a href="/dashboard" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span class="nav-text">主控台</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/statistics" class="nav-link">
+            <i class="fas fa-chart-bar"></i>
+            <span class="nav-text">數據統計</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/settings" class="nav-link">
+            <i class="fas fa-cog"></i>
+            <span class="nav-text">系統設定</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/system" class="nav-link">
+            <i class="fas fa-info-circle"></i>
+            <span class="nav-text">系統資訊</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="connection-status">
+        <i class="fas fa-wifi status-connected"></i>
+        <span class="status-text">已連接</span>
+      </div>
       <div class="device-info">
-        <p>IP: {{IP_ADDRESS}} | 記憶體: {{FREE_HEAP}} bytes</p>
+        <small>IP: {{IP_ADDRESS}}</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主內容區域 -->
+  <div class="main-content" id="mainContent">
+    <!-- 頂部導航欄 -->
+    <header class="top-header">
+      <div class="header-left">
+        <h1 class="page-title">
+          <i class="fas fa-tachometer-alt"></i>
+          主控台
+        </h1>
+      </div>
+      <div class="header-right">
+        <div class="system-status">
+          <span class="status-item">
+            <i class="fas fa-memory"></i>
+            <span id="heapMemory">{{FREE_HEAP}}</span> bytes
+          </span>
+          <span class="status-item">
+            <i class="fas fa-signal"></i>
+            <span id="wifiRSSI">-</span> dBm
+          </span>
+          <span class="status-item" id="uptime">
+            <i class="fas fa-clock"></i>
+            運行中
+          </span>
+        </div>
       </div>
     </header>
 
-    <main>
-      <!-- 新增燈泡顯示區域 -->
-      <div class="bulb-container">
-        <div class="bulb {{BULB_GLOW}}" id="bulb">
-          <div class="bulb-top"></div>
-          <div class="bulb-middle"></div>
-          <div class="bulb-bottom"></div>
-          <div class="bulb-base"></div>
-          <div class="bulb-reflection"></div>
-        </div>
-        <div class="bulb-status" id="bulbStatus">{{STATUS_TEXT}}</div>
-        <div class="filament {{BULB_GLOW}}" id="filament"></div>
-      </div>
+    <!-- 主內容 -->
+    <main class="content-area">
+      <div class="dashboard-grid">
+        <!-- 燈泡控制卡片 -->
+        <div class="card bulb-card">
+          <div class="card-header">
+            <h3><i class="fas fa-lightbulb"></i> 燈泡控制</h3>
+          </div>
+          <div class="card-body">
+            <div class="bulb-container">
+              <div class="bulb {{BULB_GLOW}}" id="bulb">
+                <div class="bulb-top"></div>
+                <div class="bulb-middle"></div>
+                <div class="bulb-bottom"></div>
+                <div class="bulb-base"></div>
+                <div class="bulb-reflection"></div>
+              </div>
+              <div class="filament {{BULB_GLOW}}" id="filament"></div>
+              <div class="bulb-status" id="bulbStatus">{{STATUS_TEXT}}</div>
+            </div>
 
-      <div class="control-panel">
-        <div class="status-indicator">
-          <div class="led-status {{LED_COLOR}}">
-            GPIO 2 狀態: <span id="ledState">{{LED_STATE}}</span>
+            <div class="control-buttons">
+              <button class="btn btn-success btn-lg" onclick="controlLED('on')">
+                <i class="fas fa-power-off"></i> 開啟
+              </button>
+              <button class="btn btn-danger btn-lg" onclick="controlLED('off')">
+                <i class="fas fa-times"></i> 關閉
+              </button>
+              <button class="btn btn-primary btn-lg" onclick="controlLED('toggle')">
+                <i class="fas fa-sync"></i> 切換
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="button-group">
-          <button class="btn btn-success" onclick="controlLED('on')">💡 開啟燈泡</button>
-          <button class="btn btn-danger" onclick="controlLED('off')">🔌 關閉燈泡</button>
-          <button class="btn btn-primary" onclick="controlLED('toggle')">🔄 切換狀態</button>
+        <!-- 狀態資訊卡片 -->
+        <div class="card status-card">
+          <div class="card-header">
+            <h3><i class="fas fa-info-circle"></i> 裝置狀態</h3>
+          </div>
+          <div class="card-body">
+            <div class="status-list">
+              <div class="status-item">
+                <span class="status-label">GPIO 2 狀態:</span>
+                <span class="status-value {{LED_COLOR}}" id="gpioStatus">{{LED_STATE}}</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">燈泡狀態:</span>
+                <span class="status-value" id="bulbStateText">{{STATUS_TEXT}}</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Wi-Fi 訊號:</span>
+                <span class="status-value" id="wifiStatus">載入中...</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">記憶體使用:</span>
+                <span class="status-value" id="memoryStatus">載入中...</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">運行時間:</span>
+                <span class="status-value" id="uptimeStatus">載入中...</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="system-info">
-          <h3>系統資訊</h3>
-          <div id="systemStatus">載入中...</div>
+        <!-- 快速操作卡片 -->
+        <div class="card quick-actions-card">
+          <div class="card-header">
+            <h3><i class="fas fa-bolt"></i> 快速操作</h3>
+          </div>
+          <div class="card-body">
+            <div class="quick-actions">
+              <button class="action-btn" onclick="controlLED('toggle')">
+                <i class="fas fa-sync"></i>
+                <span>切換燈泡</span>
+              </button>
+              <button class="action-btn" onclick="refreshStatus()">
+                <i class="fas fa-redo"></i>
+                <span>刷新狀態</span>
+              </button>
+              <button class="action-btn" onclick="showSystemInfo()">
+                <i class="fas fa-microchip"></i>
+                <span>系統資訊</span>
+              </button>
+              <button class="action-btn" onclick="restartDevice()">
+                <i class="fas fa-play-circle"></i>
+                <span>重啟裝置</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
-
-    <footer>
-      <p>ESP32 Web Server &copy; 2024</p>
-    </footer>
   </div>
 
   <script src="script.js"></script>

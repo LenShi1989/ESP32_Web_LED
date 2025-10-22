@@ -192,11 +192,40 @@ bool initializeWiFi()
   }
 }
 
-// 在 initializeWebServer() 函數中新增路由
+// 新增頁面路由處理函數
+void handleDashboard()
+{
+  String html = processHTMLTemplate("/index.html");
+  server.send(200, "text/html", html);
+}
+
+void handleSettings()
+{
+  String html = processHTMLTemplate("/settings.html");
+  server.send(200, "text/html", html);
+}
+
+void handleStatistics()
+{
+  String html = processHTMLTemplate("/statistics.html");
+  server.send(200, "text/html", html);
+}
+
+void handleSystemInfo()
+{
+  String html = processHTMLTemplate("/system.html");
+  server.send(200, "text/html", html);
+}
+
+//  在 initializeWebServer() 函數中新增路由
 void initializeWebServer()
 {
   // 靜態檔案服務
-  server.on("/", HTTP_GET, handleRoot);
+  server.on("/", HTTP_GET, handleDashboard);
+  server.on("/dashboard", HTTP_GET, handleDashboard);
+  server.on("/settings", HTTP_GET, handleSettings);
+  server.on("/statistics", HTTP_GET, handleStatistics);
+  server.on("/system", HTTP_GET, handleSystemInfo);
   server.on("/style.css", HTTP_GET, handleCSS);
   server.on("/script.js", HTTP_GET, handleJS);
   server.on("/favicon.ico", HTTP_GET, handleFavicon);
@@ -207,6 +236,7 @@ void initializeWebServer()
   server.on("/api/led/toggle", HTTP_POST, handleLEDToggle);
   server.on("/api/status", HTTP_GET, handleGetStatus);
   server.on("/api/bulb/status", HTTP_GET, handleBulbStatus); // 新增燈泡狀態 API
+  server.on("/api/system/info", HTTP_GET, handleSystemInfoAPI);
 
   // 404 處理
   server.onNotFound(handleNotFound);
@@ -247,6 +277,64 @@ void handleBulbStatus()
   doc["bulb_color"] = ledState ? "#ffd700" : "#666666";
   doc["bulb_glow"] = ledState ? "bulb-on" : "bulb-off";
   doc["status_text"] = ledState ? "燈泡亮起" : "燈泡熄滅";
+
+  String response;
+  serializeJson(doc, response);
+  server.send(200, "application/json", response);
+}
+
+String getResetReasonString(esp_reset_reason_t reason)
+{
+  switch (reason)
+  {
+  case ESP_RST_UNKNOWN:
+    return "Unknown";
+  case ESP_RST_POWERON:
+    return "Power on";
+  case ESP_RST_EXT:
+    return "External reset";
+  case ESP_RST_SW:
+    return "Software reset";
+  case ESP_RST_PANIC:
+    return "Panic/exception";
+  case ESP_RST_INT_WDT:
+    return "Interrupt watchdog";
+  case ESP_RST_TASK_WDT:
+    return "Task watchdog";
+  case ESP_RST_WDT:
+    return "Other watchdog";
+  case ESP_RST_DEEPSLEEP:
+    return "Deep sleep";
+  case ESP_RST_BROWNOUT:
+    return "Brownout";
+  case ESP_RST_SDIO:
+    return "SDIO";
+  default:
+    return "No reason";
+  }
+}
+
+// 新增系統資訊 API
+void handleSystemInfoAPI()
+{
+  DynamicJsonDocument doc(512);
+  doc["status"] = "success";
+  doc["device"]["chip_model"] = ESP.getChipModel();
+  doc["device"]["cpu_freq"] = ESP.getCpuFreqMHz();
+  doc["device"]["flash_size"] = ESP.getFlashChipSize();
+  doc["device"]["sdk_version"] = ESP.getSdkVersion();
+
+  doc["memory"]["free_heap"] = ESP.getFreeHeap();
+  doc["memory"]["min_free_heap"] = ESP.getMinFreeHeap();
+  doc["memory"]["max_alloc_heap"] = ESP.getMaxAllocHeap();
+
+  doc["wifi"]["ssid"] = WiFi.SSID();
+  doc["wifi"]["rssi"] = WiFi.RSSI();
+  doc["wifi"]["ip"] = WiFi.localIP().toString();
+  doc["wifi"]["mac"] = WiFi.macAddress();
+
+  doc["system"]["uptime"] = millis();
+  doc["system"]["restart_reason"] = getResetReasonString(esp_reset_reason());
 
   String response;
   serializeJson(doc, response);
