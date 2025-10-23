@@ -10,8 +10,10 @@
 
 // ========== 設定區 ==========
 // 網路設定
-const char *ssid = "TP-LINK_123BF4";
-const char *password = "04518280";
+// const char *ssid = "TP-LINK_123BF4";
+// const char *password = "04518280";
+const char *ssid = "JQuan-WiFi";
+const char *password = "6654o963";
 
 // 裝置設定
 const int ledPin = 2;
